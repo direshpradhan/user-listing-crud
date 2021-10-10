@@ -22,11 +22,16 @@ export const UserListing = () => {
       <div className="userList">
         <Typography variant="h5">User Listing</Typography>
         <List sx={{ width: { md: "60%", xs: "95%" } }}>
-          {/* <Grid container> */}
           {users.map((user) => {
-            return <UserItem key={user.id} user={user} />;
+            return (
+              <UserItem
+                key={user.id}
+                user={user}
+                users={users}
+                setUsers={setUsers}
+              />
+            );
           })}
-          {/* </Grid> */}
         </List>
       </div>
     </>
