@@ -14,6 +14,8 @@ import DoneIcon from "@mui/icons-material/Done";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import axios from "axios";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const UserItem = ({ user, users, setUsers }) => {
   const [firstName, setFirstName] = useState(user.first_name);
@@ -29,6 +31,15 @@ export const UserItem = ({ user, users, setUsers }) => {
       email,
     });
     console.log(response);
+    if (response.status === 200) {
+      toast.success("Updated user !!", {
+        position: "top-center",
+        theme: "colored",
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
+    }
     setIsEditable(() => false);
   }
 
@@ -38,6 +49,13 @@ export const UserItem = ({ user, users, setUsers }) => {
     if (response.status === 204) {
       const newUserList = users.filter((user) => user.id !== id);
       setUsers(() => newUserList);
+      toast.error("Deleted user !!", {
+        position: "top-center",
+        theme: "colored",
+        autoClose: 3000,
+        closeOnClick: true,
+        pauseOnHover: false,
+      });
     }
   }
 
@@ -120,6 +138,7 @@ export const UserItem = ({ user, users, setUsers }) => {
           </ListItem>
         </List>
       )}
+      <ToastContainer />
     </>
   );
 };
