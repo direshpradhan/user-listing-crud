@@ -5,23 +5,27 @@ import {
   ListItemText,
   TextField,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import EditIcon from "@mui/icons-material/Edit";
 import DoneIcon from "@mui/icons-material/Done";
+import axios from "axios";
 
 export const UserItem = ({ user }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [firstName, setFirstName] = useState(user.first_name);
+  const [lastName, setLastName] = useState(user.last_name);
+  const [email, setEmail] = useState(user.email);
   const [isEditable, setIsEditable] = useState(false);
 
-  useEffect(() => {
-    (function () {
-      setFirstName(() => user.first_name);
-      setLastName(() => user.last_name);
-      setEmail(() => user.email);
-    })();
-  }, [user]);
+  async function updateUserData(id, firstName, lastName, email) {
+    const response = await axios.put(`https://reqres.in/api/users/${id}`, {
+      firstName,
+      lastName,
+      email,
+    });
+    console.log(response);
+    setIsEditable(() => false);
+  }
+
   return (
     <>
       <ListItem>
@@ -29,10 +33,29 @@ export const UserItem = ({ user }) => {
           <Avatar src={user.avatar} />
         </ListItemAvatar>
         {isEditable ? (
-          <>
-            <TextField variant="standard" value={`${firstName} ${lastName}`} />
-            <TextField variant="standard" value={email} />
-          </>
+          <ListItemText>
+            <TextField
+              variant="standard"
+              label="First Name"
+              value={firstName}
+              onChange={(event) => setFirstName(() => event.target.value)}
+              sx={{ marginRight: "2rem", marginBottom: "0.75rem" }}
+            />
+            <TextField
+              variant="standard"
+              label="Last Name"
+              value={lastName}
+              onChange={(event) => setLastName(() => event.target.value)}
+              sx={{ marginRight: "2rem", marginBottom: "0.75rem" }}
+            />
+            <TextField
+              variant="standard"
+              label="Email"
+              value={email}
+              onChange={(event) => setEmail(() => event.target.value)}
+              sx={{ marginRight: "2rem" }}
+            />
+          </ListItemText>
         ) : (
           <ListItemText
             primary={`${firstName} ${lastName}`}
@@ -40,7 +63,9 @@ export const UserItem = ({ user }) => {
           />
         )}
         {isEditable ? (
-          <DoneIcon onClick={() => setIsEditable(() => false)} />
+          <DoneIcon
+            onClick={() => updateUserData(user.id, firstName, lastName, email)}
+          />
         ) : (
           <EditIcon
             fontSize="small"

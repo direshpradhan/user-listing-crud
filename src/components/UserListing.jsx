@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
-import { Grid, List } from "@mui/material";
+import { List, Typography } from "@mui/material";
 import { UserItem } from "./UserItem";
+import { AddUser } from "./AddUser";
 
 export const UserListing = () => {
   const [users, setUsers] = useState([]);
@@ -16,17 +17,18 @@ export const UserListing = () => {
   }, []);
 
   return (
-    <div>
-      <h2>User Listing</h2>
-      <Grid container spacing={2}>
-        <List>
-          <Grid item>
-            {users.map((user) => {
-              return <UserItem user={user} />;
-            })}
-          </Grid>
+    <>
+      <AddUser users={users} setUsers={setUsers} />
+      <div className="userList">
+        <Typography variant="h5">User Listing</Typography>
+        <List sx={{ width: { md: "60%", xs: "95%" } }}>
+          {/* <Grid container> */}
+          {users.map((user) => {
+            return <UserItem key={user.id} user={user} />;
+          })}
+          {/* </Grid> */}
         </List>
-      </Grid>
-    </div>
+      </div>
+    </>
   );
 };
